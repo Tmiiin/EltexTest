@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">EltexTest</string>
+    <string name="domain">com.example.eltextest</string>
+    <string name="login">Введите логин</string>
+    <string name="password">Введите пароль</string>
+    <string name="enter">Войти</string>
+    <string name="permission_text">Ваш список доступных разрешений:</string>
+    <string name="username">username:</string>
+    <string name="role">role:</string>
+</resources>
