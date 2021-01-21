@@ -6,10 +6,10 @@ import android.os.Parcelable;
 import java.util.List;
 
 public class UserInfoResponse implements Parcelable {
-    private List<String> permissions;
-    private String email;
-    private String roleId;
-    private String username;
+    private final List<String> permissions;
+    private final String email;
+    private final String roleId;
+    private final String username;
 
     protected UserInfoResponse(Parcel in) {
         permissions = in.createStringArrayList();

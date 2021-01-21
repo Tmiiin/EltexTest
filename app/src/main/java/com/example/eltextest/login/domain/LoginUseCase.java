@@ -7,7 +7,7 @@ import retrofit2.Response;
 
 public class LoginUseCase {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public LoginUseCase(UserRepository userRepository) {
         this.userRepository = userRepository;

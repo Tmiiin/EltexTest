@@ -24,12 +24,11 @@ import java.util.List;
 
 public class LoginFragment extends Fragment {
 
-    private final String TAG = "main";
-    private final String TOKEN = "token";
     EditText editLogin;
     EditText editPassword;
     Button enterButton;
     LoginPresenter presenter;
+    private final String TAG = "LoginFragment";
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -81,12 +80,11 @@ public class LoginFragment extends Fragment {
     public void goToInfoView(UserInfoResponse userInfoResponse) {
         UserFragment userFragment = new UserFragment();
         Bundle args = new Bundle();
-        args.putParcelable("info", userInfoResponse);
+        args.putParcelable(getString(R.string.info), userInfoResponse);
         userFragment.setArguments(args);
-        Log.i(TAG, "Go to user info view");
+        Log.i(TAG, "go to user info view");
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.main_container, userFragment, TAG)
-                //.addToBackStack(null)
                 .commit();
     }
 
@@ -94,4 +92,5 @@ public class LoginFragment extends Fragment {
         presenter.onDestroy();
         super.onDestroy();
     }
+
 }

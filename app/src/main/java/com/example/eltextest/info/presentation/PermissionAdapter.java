@@ -14,7 +14,7 @@ import java.util.List;
 
 public class PermissionAdapter extends RecyclerView.Adapter<PermissionAdapter.PermissionViewHolder> {
 
-    private List<String> permissionList;
+    private final List<String> permissionList;
 
     public PermissionAdapter(List<String> permissionList) {
         this.permissionList = permissionList;

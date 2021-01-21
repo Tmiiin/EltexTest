@@ -12,10 +12,7 @@ import com.example.eltextest.login.data.model.LoginResponse;
 import com.example.eltextest.login.domain.LoginUseCase;
 import com.example.eltextest.login.ui.LoginFragment;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -27,9 +24,8 @@ public class LoginPresenter {
 
     private final LoginUseCase loginUseCase;
     private final GetUserInfoUseCase getInfoUseCase;
-    private LoginFragment view = null;
-    private final String TAG = "Login";
-    private final String token = "token";
+    private LoginFragment view;
+    private final String TAG = "LoginPresenter";
 
 
     public LoginPresenter(LoginUseCase loginUseCase, GetUserInfoUseCase getInfoUseCase) {
@@ -56,7 +52,7 @@ public class LoginPresenter {
                         public void onSuccess(@NonNull Response<LoginResponse> loginResponse) {
                             switch (loginResponse.code()) {
                                 case 500: {
-                                    view.makeErrorToast("500 ошибка!!!!!");
+                                    view.makeErrorToast(view.getString(R.string.error500));
                                     break;
                                 }
                                 case 200: {
@@ -64,11 +60,11 @@ public class LoginPresenter {
                                     break;
                                 }
                                 case 400: {
-                                    view.makeErrorToast("Что-то нет такого аккаунта на сервере....");
+                                    view.makeErrorToast(view.getString(R.string.error400));
                                     break;
                                 }
                                 default:
-                                    Log.e(TAG, String.valueOf(loginResponse.code()));
+                                    view.makeErrorToast(loginResponse.message());
                             }
                             view.hideChildProgressBar();
                         }
@@ -82,12 +78,12 @@ public class LoginPresenter {
                     });
         } else {
             view.hideChildProgressBar();
-            view.makeErrorToast("Параметры не валидны");
+            view.makeErrorToast(view.getString(R.string.params_validation));
         }
     }
 
     private void handleLoginResponse(String accessToken, String login, String password) {
-        Log.e(TAG, accessToken);
+        Log.i(TAG, "Received token: " + accessToken);
         createOrUpdateAccount(login, password, accessToken);
         checkToken(accessToken);
     }
@@ -96,7 +92,7 @@ public class LoginPresenter {
         Account myAccount = getAccount();
         if (myAccount != null) { //если на устройстве уже есть зарегистрированный аккаунт
             //проверяем, валидный ли токен сохранен
-            checkToken(AccountManager.get(view.getContext()).getUserData(myAccount, token));
+            checkToken(AccountManager.get(view.getContext()).getUserData(myAccount, view.getString(R.string.token)));
         } else {
             view.showEnterScreen();
         }
@@ -111,7 +107,7 @@ public class LoginPresenter {
                     public void onSuccess(@NonNull Response<UserInfoResponse> userResponse) {
                         switch (userResponse.code()) {
                             case 500: {
-                                view.makeErrorToast("500 ошибка в проверке токена!!!!!");
+                                view.makeErrorToast(view.getString(R.string.error500));
                                 view.showEnterScreen();
                                 break;
                             }
@@ -120,10 +116,12 @@ public class LoginPresenter {
                                 break;
                             }
                             case 401: {
-                                view.makeErrorToast("чото токен не тот");
+                                view.makeErrorToast(view.getString(R.string.error401));
                                 view.showEnterScreen();
                                 break;
                             }
+                            default:
+                                view.makeErrorToast(userResponse.message());
                         }
                         view.hideChildProgressBar();
                     }
@@ -148,25 +146,24 @@ public class LoginPresenter {
         for (Account account : accountManager.getAccounts()) {
             if (account.name.equals(login)) { //если такой аккаунт был зарегистрирован ранее
                 accountManager.setPassword(account, password);//меняем его данные
-                options.putString(this.token, token);
-                accountManager.setUserData(account, this.token, token);
+                options.putString(view.getString(R.string.token), token);
+                accountManager.setUserData(account, view.getString(R.string.token), token);
                 return;
             }
         }
         myAccount = new Account(login,
-                Objects.requireNonNull(view.getContext()).getString(R.string.domain));
-        options.putString(this.token, token);
-        accountManager.addAccountExplicitly(myAccount, password, options);
-        Log.e(TAG, accountManager.getUserData(myAccount, this.token) + " - token is");
+                view.getString(R.string.domain));
+        options.putString(view.getString(R.string.token), token);//если такого аккаунта не было -
+        accountManager.addAccountExplicitly(myAccount, password, options);//сохраняем его
     }
 
     private Account getAccount() {
         AccountManager accountManager = AccountManager.get(view.getContext());
         Account[] accounts = accountManager
-                .getAccountsByType(Objects.requireNonNull(view.getContext()).getString(R.string.domain));
+                .getAccountsByType(view.getString(R.string.domain));
         Account myAccount;
-        Log.e(TAG, Arrays.toString(accountManager
-                .getAccounts()));
+        Log.i(TAG, "Список всех доступных на устройстве аккаунтов: "
+                + Arrays.toString(accountManager.getAccounts()));
         if (accounts.length == 1) { //если на устройстве зарегистрирован был только один пользователь
             myAccount = accounts[0];
             return myAccount;

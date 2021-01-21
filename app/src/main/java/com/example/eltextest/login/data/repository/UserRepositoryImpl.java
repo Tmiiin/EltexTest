@@ -5,7 +5,6 @@ import com.example.eltextest.login.data.model.LoginResponse;
 import com.example.eltextest.login.data.model.UserInfoResponse;
 import com.example.eltextest.login.domain.UserRepository;
 
-import java.util.List;
 
 import io.reactivex.Single;
 import retrofit2.Response;

@@ -7,4 +7,10 @@
     <string name="permission_text">Ваш список доступных разрешений:</string>
     <string name="username">username:</string>
     <string name="role">role:</string>
+    <string name="info">info</string>
+    <string name="token">token</string>
+    <string name="error500">Ошибка на стороне сервера</string>
+    <string name="error400">Проверьте введенные данные!</string>
+    <string name="error401">Ошибка авторизации, попробуйте ввести пароль еще раз</string>
+    <string name="params_validation">"Длина логина и пароля должна быть не меньше 3 символов!"</string>
 </resources>
